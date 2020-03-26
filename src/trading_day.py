@@ -12,10 +12,15 @@ config = Config()
 transaction_fee = config.get_generic_config_property('portfolio','transaction_fee')
 max_holdings = config.get_generic_config_property('portfolio','max_holdings')
 
+#beginning = datetime.datetime.strptime(config.get_generic_config_property('stocks','start_date'), '%Y-%m-%d').date()
+#finish = datetime.datetime.strptime(config.get_generic_config_property('stocks','end_date'), '%Y-%m-%d').date()
+
 portfolio = Portfolio()
 raw_market_data = GetStocks()
 raw_market_data = raw_market_data.stock_data.dropna()
-time_window = 580 #days
+
+#time window has to reflect number of trading days, should be number of rows in the raw market data - 1
+time_window = raw_market_data.shape[0] - 1 #114 #(finish - beginning).days - 5 #days
 today = raw_market_data.iloc[2].name.strftime('%Y-%m-%d')
 
 
@@ -115,19 +120,21 @@ def total_value (portfolio_dict: dict())->float():
     return tmp_value
 
 
-case_studies = {}
-total_transactions = []
-for sim in range(29):
-    portfolio = Portfolio()
-    portfolio_dict_raw = {}
-    portfolio_dict_raw = portfolio.get_new_portfolio(raw_market_data.iloc[:2], specific_ls=[]).copy()
-    print(f'here is the very beginning of dict: {portfolio_dict_raw}')
-    portfolio_dict_buy_and_hold = copy.deepcopy(portfolio_dict_raw)
-    portfolio_dict_buy_and_hold_final = assess_buy_and_hold(portfolio_dict_buy_and_hold, raw_market_data)
-    final_value_buy_and_hold = total_value(portfolio_dict_buy_and_hold_final)
-    output_portfolio = run_trading_simulation(time_window, portfolio_dict_raw, today, raw_market_data)
-    final_value_buy_and_sell = total_value(output_portfolio)
-    case_studies[sim] = {'buy_and_hold':[final_value_buy_and_hold, list(portfolio_dict_buy_and_hold_final.keys())], 'buy_and_sell': [final_value_buy_and_sell, list(output_portfolio.keys())]} #'buy_and_hold':final_value_buy_and_hold,
-    total_transactions.append(portfolio.transaction_tracker)
+if __name__ == "__main__":
+    
+    case_studies = {}
+    total_transactions = []
+    for sim in range(29):
+        portfolio = Portfolio()
+        portfolio_dict_raw = {}
+        portfolio_dict_raw = portfolio.get_new_portfolio(raw_market_data.iloc[:2], specific_ls=[]).copy()
+        print(f'here is the very beginning of dict: {portfolio_dict_raw}')
+        portfolio_dict_buy_and_hold = copy.deepcopy(portfolio_dict_raw)
+        portfolio_dict_buy_and_hold_final = assess_buy_and_hold(portfolio_dict_buy_and_hold, raw_market_data)
+        final_value_buy_and_hold = total_value(portfolio_dict_buy_and_hold_final)
+        output_portfolio = run_trading_simulation(time_window, portfolio_dict_raw, today, raw_market_data)
+        final_value_buy_and_sell = total_value(output_portfolio)
+        case_studies[sim] = {'buy_and_hold':[final_value_buy_and_hold, list(portfolio_dict_buy_and_hold_final.keys())], 'buy_and_sell': [final_value_buy_and_sell, list(output_portfolio.keys())]} #'buy_and_hold':final_value_buy_and_hold,
+        total_transactions.append(portfolio.transaction_tracker)
 
 

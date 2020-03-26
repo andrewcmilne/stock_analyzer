@@ -32,9 +32,13 @@ class GetStocks():
         else:
             path = self.config.get_generic_config_property('data','main_save_path') + self.config.get_generic_config_property('data', 'default_history')
 
-            with open(path, 'rb') as handle:
-                self.stock_data = pickle.load(handle)
-                handle.close()
+            try:
+                with open(path, 'rb') as handle:
+                    self.stock_data = pickle.load(handle)
+                    handle.close()
+            except:
+                print('no debug data available')
+                pass
 
     def _run_read_data(self, ls_tickers: list(), source: str(), start: str(), end: str())->pd.DataFrame():
         self.stock_data = DataReader(self.ls_tickers, self.source, self.start, self.end)

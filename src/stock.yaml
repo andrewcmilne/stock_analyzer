@@ -6,8 +6,8 @@ data:
 
 stocks:
   data_source: 'yahoo'
-  start_date: '2019-09-01'
-  end_date: '2019-09-04'
+  start_date: '2019-10-01'
+  end_date: '2020-03-19'
   tkr_ls: ['ENB.TO', 'BNS.TO', 'TD.TO', 'RY.TO', 'MFC', 'CM.TO', 'BMO.TO', 'XLB.TO','VDY.TO', 'VI.TO', 'VEE.TO', 'VRE.TO', 'VSP.TO', 'VDY.TO', 'VCE.TO']
   top_20: ['VAB.TO','VI.TO','VEE.TO','VRE.TO','MFC','CM.TO','BMO.TO','ENB.TO','BNS.TO','TD.TO','VSP.TO','RY.TO']   #top 10 holdings from VCE & VSP, VDY, VFV, VAB
   hist_index: ['High', 'Low', 'Open', 'Close', 'Volume', 'Adj Close']
